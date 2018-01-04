@@ -13,7 +13,7 @@
 @RequestMapping("/...")  //整个controller路径
 @PostMapping(value = "/....")     //url路径
     public BaseResponse getLocationHistory() {
-        Transaction t = Cat.newTransaction("Controller", "getLocationHistory");
+        Transaction t = Cat.newTransaction("Controller", "函数名");
         String location = request.getParameter("location");
         try {     
             t.setStatus(Transaction.SUCCESS);
