@@ -1,0 +1,30 @@
+小知识：
+timestamp是unix time，我们需要自己转换。
+vue需要安装node 和npm，直接在项目中npm install，然后npm run dev启动项目
+tofixed保存几位小数，返回值是字符串
+highchart画图
+f.parse(caldate):将caldate创建成f格式的date对象
+
+response.data[i]['size_inc']可以给data添加新的属性
+
+目录信息统计：
+    使用hadoop命令我们可以查看hafs（hadoop文件管理系统）下各个目录的信息。
+    首先查阅hadoop命令，常用的hadoop fs -ls查看当前目录下子目录信息；hadoop fs -du -s查看文件大小，hadoop fs -count查看文件数和目录数
+    命令是xshell命令，我们可以在xshell执行看一下结果信息。
+    如何在程序中执行命令呢？
+    我们把需要执行的命令存放到字符串数组中，使用java的CommandRunner命令的run方法，返回CommandResult对象，从中可以获取命令执行的结果。
+    当目录数特别多的时候怎么办呢？
+    当目录特别多的时候我们一个一个去统计，执行速度会很慢。所以采取批处理的方式。一次传入多个目录，这样就可以一次处理多个目录，然后父目录的信息直接用
+    子目录的值累加起来来获取。
+    注意：坑，有的时候你在ls时获取到的部分目录在你要进行count计算，他可能又被人删除掉了，所以返回结果就会是空。。。
+    
+    
+数据库信息查询：
+    导入ibatis包，然后可以在程序中创建Dao文件继承我们生成的dao文件，然后使用@select（sql语句）可以对数据库进行我们需要的增删改查，返回的结果一般是
+    list<map<String,object>>类型的，list是因为有多条返回结果，map是应为我们要查询多个列的内容，其中键是列名，值是查询到的值。值选用Object类型是因为
+    在数据库中数据的类型各不相同有的是int，有的是varchar所以我们统一存成object。
+    
+逻辑处理：
+    我们创建service接口来实现获取到的数据库数据处理逻辑。调用上面的方法获取到数据库中的数据后我们进行处理。
+    一般需要创建bean类来存储我们查询的信息。然后向前端返回数据时直接返回保存数据的对象即可。
+    
