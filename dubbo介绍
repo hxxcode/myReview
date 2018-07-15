@@ -1,0 +1,55 @@
+dubbo是基于rpc远程服务调用的分布式服务框架，并具有流式服务计算，负载均衡能力。
+dubbo架构
+
+provider：服务提供方
+consumer：服务调用方。
+registry：服务注册中心
+Monitor：服务监控中心
+0.start：container服务容器负责启动运行服务提供者
+1.register:服务提供者向注册中心注册提供注册信息，注册服务
+2.subscribe：服务调用方向注册中心订阅需要调用的服务。
+3.notify：注册中心返回服务提供者提供的地址列表
+4.invoke：服务提供方基于软负载均衡算法从返回的地址列表中选择一个来调用服务。
+5.count：监控中心记录服务被调用的次数和调用时间等信息
+服务提供方是如何暴露服务给注册中心
+1.通过ServiceConfig类来获取对外提供的服务实际实现类ref（例如：DemoServiceImpl）。
+2.通过ProxyFactory类的getInvoker方法获取接口的代理，生成一个Invoker实例。完成具体服务到invoker的转化。
+3.使用Protocol类的export方法将invoker暴露给外部。
+ 
+服务调用方是如何获取到服务进行消费呢？
+1.Protocol调用refer方法引用远程服务。获取远程服务对应的invoker
+2.调用ProxyFactory类的getProxy方法获取远程服务对应的接口代理对象（例如：DemoService）
+ 
+服务调用过程
+1.服务调用方通过proxy（远程服务,例如：DemoService）调用其对应的invoker（DubboInvoker等）。
+2.invoker向服务提供方发送请求，服务提供方寻找对应的exporter实例，并调用服务具体实现类对应的代理invoker。
+ 
+dubbo配置
+服务提供方：
+
+服务调用方：
+
+ 
+dubbo的软负载均衡策略
+dubbo具有四种负载均衡策略。
+Random LoadBalance(随机均衡算法)
+RoundRobin LoadBalance(权重轮循均衡算法)
+LeastAction LoadBalance(最少活跃调用数均衡算法)
+ConsistentHash LoadBalance(一致性Hash均衡算法)
+
+1.RoundRobin LoadBalance(权重轮循均衡算法)：
+按照不同机器的处理能力设置轮询权重。将来自用户的请求轮流分配给内部服务器。权重较大的服务器被分配的请求多（比如三台服务器，权重比为3：1：1。那么请求来临时会分配给服务器A，直到给它分配了三个请求后才会分配给服务器B）
+优点：权重轮询方式相较于传统的轮询算法考虑了不同机器的处理能力和性能。避免出现当请求数量很大时，性能较弱的机器出现请求处理大量排队现象。
+
+2.ConsistentHash LoadBalance(一致性Hash均衡算法)：
+一致性hash算法需要配置：
+hash.arguments：当进行调用时候根据调用方法的哪几个参数生成key，并根据key来通过致性hash算法来选择调用结点。
+hash.nodes：为结点的副本数。
+相同参数的请求总是被安排到同一个提供者。使用环形hash空间。将不同参数的请求的hash值以及各个虚拟节点的hash值作为key放置在环形hash空间上。 当添加或者删除机器时，已存在的映射关系改动较小。通过设置机器的虚拟节点可以使负载尽可能的均衡。
+ 
+3.LeastAction LoadBalance(最少活跃调用数均衡算法)：
+     每个服务维护一个活跃数计数器。当A机器开始处理请求，该计数器加1，此时A还未处理完成。若处理完毕则计数器减1。而B机器接受到请求后很快处理完毕。那么A,B的活跃数分别是1，0。
+当又产生了一个新的请求，则选择B机器去执行(B活跃数最小)，这样使慢的机器A收到少的请求。
+ 
+4.Random LoadBalance(随机均衡算法)：
+    按权重设置随机概率。
