@@ -1,0 +1,38 @@
+@ComponentScan：
+表示spring boot应用自动发现扫描组件。扫描有@Component、@Controller、@Service，@Repository等这些注解的类，并注册为Bean，可以自动收集所有的Spring组件，包括@Configuration类。
+如果不设置basePackages，默认扫描当前类所在包和子包的所有类。如果我们想指定扫描的包，使用basePackages。
+@Configuration：
+spring配置类，相当于把该类作为spring的xml配置文件中的<beans>。在该类中使用@Bean来指定bean。
+@EnableAutoConfiguration：
+尝试根据添加的jar依赖自动配置spring。自动载入应用程序所需要的bean
+@SpringBootApplication：让spring boot自动给spring boot应用进行配置。是@ComponentScan，@Configuration，@EnableAutoConfiguration三个注解的集合。
+@ImportResource：用来加载Spring xml配置文件。
+@Autowired：自动导入依赖的bean，byType方式。 在使用@Autowired时，首先在容器中查询对应类型的bean。通过<context:component-scan base-package="包名"/>方式指定查询范围
+ 
+　　　　如果查询结果刚好为一个，就将该bean装配给@Autowired指定的数据。
+ 
+　　　　如果查询的结果不止一个，那么@Autowired会根据名称来查找。
+ 
+　　　　如果查询的结果为空，那么会抛出异常。解决方法时，使用required=false。
+ 
+@Service：一般用于修饰service层的组件。
+@Repository：注解修饰的DAO或者repositories类会被ComponetScan发现并配置，同时也不需要为它们提供XML配置项。
+@Bean：用@Bean标注方法等价于XML中配置的bean
+ 
+通过AutoWired注入创建对象来调用被注入类的方法。使用注解注入的对象是单例的，被注入的对象不可以new创建该类型的其他对象。如果希望new创建被注解修饰的对象，需要在被注入的对象上使用@Configurable。
+ 
+ 
+HTTP请求处理常用注解
+@ResponseBody：
+表示将方法的返回结果直接写入HTTP response body中。在使用@Controller的控制器类中，HTTP接口上使用@RequestMapping后，返回值通常解析为跳转路径（jsp，html页面），加上@responsebody后返回结果不会被解析为跳转路径，而是直接写入HTTP response body中。
+比如返回结果是json数据，加上@ResponseBody后，会直接返回json数据。该注解一般会配合@Controller和@RequestMapping一起使用。
+@Controller：
+用于定义控制器类，在spring 项目中由控制器负责将用户发来的URL请求转发到对应的服务接口，一般这个注解在类中，通常方法需要配合注解@RequestMapping。在对应的方法上，视图解析器可以解析return 的jsp,html页面，并且跳转到相应页面。
+ 
+若返回json等内容到页面，则需要加@ResponseBody注解。
+ 
+@RestController：@Controller和@ResponseBody的结合。将接口返回结果直接写入到HTTP response body中。不能解析jsp和html页面。
+@RequestMapping：提供路由信息，负责URL到Controller中的具体函数的映射。可以用@GetMapping和@PostMapping来分别表示post请求和get请求。
+@RequestBody：常用来处理content-type不是默认的application/x-www-form-urlcoded编码的内容，比如说：application/json或者是application/xml等。一般情况下来说常用其来处理application/json类型。可以将json字符串中的值赋予到bean对象对应的字段上。
+@RequestParam：从get请求路径参数中获取参数。例如：@GetMapping（value="request?id=1 "）,通过@RequestParam（“Id”）Integer id来获取参数。
+@PathVariable：从请求路径中获取参数。常用于get请求。例如：@GetMapping(value="/request/{Id}") ，可以在函数参数中通过@PathVariable （“Id”） Integer id 来获取参数。和上面注解两者的区别是一个是从url路径参数部分获取，一个在url路径部分获取。
