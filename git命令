@@ -1,0 +1,29 @@
+git init : 在本地创建一个代码仓库，方便提交到github
+git clone: 根据代码git url，使用命令git clone {git_url} 文件名  。将git上代码复制一份到本地
+git status: 查看项目最新修改的信息（不展示已经commit过的信息）。可以查看自己哪些修改被git查看到了，哪些没有。（有可能你修改了，但是git不知道，在commit时给漏了）
+
+git log: 显示项目push记录。 git log --online --graph图形显示   git log branchName ：只展示某个分支的提交记录
+
+git add：在commit之前 git有暂存区，只能commit到进入暂存区的文件。commit提交时是提交和上次暂存区相比的改动。比如我修改了很多文件
+只想commit一部分，git add 修改  可以完成。  
+
+git add .: 将近期所有修改都提交到暂存区，commit时commit全部，就是我们idea每次commit时的情况。
+
+git diff HEAD: 比较当前分支和上次提交的全部改动
+git diff branchA branchB: 比较分支A和分支B之间的改动
+git commit -m "commit message": 本地修改commit保存
+
+git reset HEAD: 将不小心add到暂存区的文件撤回。 可以单独针对某一个文件 在命令后面加一个文件名即可。
+git reset --hard: 将错误commit的代码回退。 如果不指定，就是回退所有还未push的commit。想只回退某次commit ，可以根据git log里面的日志信息来进行回退
+
+git revert 版本id： 再次提交某个历史版本一次，达到回退的目的
+
+git stash ： 我们有时会遇到这样的情况，正在dev分支开发新功能，做到一半时有人过来反馈一个bug，让马上解决，但是新功能做到了一半你又不想提交，这时就可以使用git stash命令先把当前进度保存起来，然后切换到另一个分支去修改bug，修改完提交后，再切回dev分支，使用git stash pop来恢复之前的进度继续开发新功能。
+
+git branch branchName：创建一个新的分支
+
+git checkout branchNmae ； 切换到不同分支
+
+git pull origin branchName
+
+git push origin branchName
